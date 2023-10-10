@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Download</title>
+  <style>
+    body {
+      background: #313131;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+      margin: auto;
+      border-radius: 20px;
+      max-width: 400px;
+      padding: 20px;
+      margin-top: 40px;
+    }
+    button {
+      background: #313131;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    p{
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Video Downloader</h1>
+    <p>Click on the download button to download the video. This was made with a callback, promise and async & await functions</p>
+    <div><button onclick="callback()">Download video for callback</button></div>
+    <div><button onclick="promise()">Download video for promise</button></div>
+    <div><button onclick="async()">Download video for async</button></div>
+  </div>
+  
+
+  <script type="text/javascript">
+      function callback() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'https://static.videezy.com/system/resources/previews/000/008/445/original/Dark_Haired_Girl_in_disbelief_1.mp4', true);
+      xhr.responseType = 'blob';
+
+      xhr.onload = function () {
+        handleVideoDownload(this.response);
+      };
+
+      xhr.onerror = function () {
+        handleDownloadError();
+      };
+
+      xhr.send();
+    }
+
+    function promise(){
+      fetch('https://static.videezy.com/system/resources/previews/000/008/445/original/Dark_Haired_Girl_in_disbelief_1.mp4')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.blob();
+        })
+        .then(videoBlob => {
+          handleVideoDownload(videoBlob);
+        })
+        .catch(error => {
+          handleDownloadError();
+        });
+    }
+
+    async function async() {
+      try {
+        const response = await fetch('https://static.videezy.com/system/resources/previews/000/008/445/original/Dark_Haired_Girl_in_disbelief_1.mp4');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const videoBlob = await response.blob();
+        handleVideoDownload(videoBlob);
+      } catch (error) {
+        handleDownloadError();
+      }
+    }
+
+      function handleVideoDownload(videoBlob) {
+      var urlCreator = window.URL || window.webkitURL;
+      var videoUrl = urlCreator.createObjectURL(videoBlob);
+      var tag = document.createElement('a');
+      tag.href = videoUrl;
+      tag.target = '_blank';
+      tag.download = 'videezyvideo.mp4';
+      document.body.appendChild(tag);
+      tag.click();
+      document.body.removeChild(tag);
+    }
+
+      function handleDownloadError() {
+      alert('Failed to download video');
+    }
+  </script>
+</body>
+</html>
